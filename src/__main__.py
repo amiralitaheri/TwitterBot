@@ -1,6 +1,7 @@
 import tweepy
 
 from src.selectors.random_selector import RandomSelector
+from src.storagehandlers.json_storage_handler import JsonStorageHandler
 from src.twitter.authentication import authenticate_1, authenticate_2
 from src.twitter.tweet_listener import TweetListener
 from src.utils.config import Config
@@ -12,7 +13,7 @@ import logging
 def retweet_function():
     (rate, status) = selected_tweets.get()
     logging.warning('retweeting message with rating(' + (rate * -1) + '):\n' + status)
-    # todo retweet
+    # status.retweet()
 
 
 if __name__ == "__main__":
@@ -22,17 +23,19 @@ if __name__ == "__main__":
         config.TRACKS = ['twitter']
 
     logging.info('starting config:'
-                 + 'retweet interval: ' + config.RETWEET_INTERVAL
-                 + 'save_tweets: ' + config.SAVE_TWEETS
+                 + 'retweet interval: ' + str(config.RETWEET_INTERVAL)
+                 + 'save_tweets: ' + str(config.SAVE_TWEETS)
                  + 'save_tweets_path: ' + config.SAVE_TWEETS_PATH
-                 + 'tracks: ' + config.TRACKS)
+                 + 'tracks: ' + " ".join(config.TRACKS))
 
     auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
 
     selected_tweets = PriorityQueue()
     tweet_selector = RandomSelector()
     storage_handler = None
-    listener = TweetListener(selected_tweets, tweet_selector)
+    if config.SAVE_TWEETS:
+        storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)
+    listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
     stream = tweepy.Stream(auth=auth, listener=listener)
 
     retweet_scheduler = BackgroundScheduler()

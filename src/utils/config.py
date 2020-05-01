@@ -12,7 +12,7 @@ class Config:
     TOKEN_KEY = "<your user token(oauth_token)>"
     TOKEN_SECRET = "<your user token secret(oauth_verifier)>"
     # retweet interval in min
-    RETWEET_INTERVAL = 1
+    RETWEET_INTERVAL = 10
     # tweets save
     SAVE_TWEETS = False
     SAVE_TWEETS_PATH = "/tweets"

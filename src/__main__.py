@@ -1,19 +1,21 @@
+import logging
+from queue import PriorityQueue
+
 import tweepy
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from src.selectors.random_selector import RandomSelector
 from src.storagehandlers.json_storage_handler import JsonStorageHandler
-from src.twitter.authentication import authenticate_1, authenticate_2
+from src.twitter.authentication import authenticate_1
 from src.twitter.tweet_listener import TweetListener
 from src.utils.config import Config
-from queue import PriorityQueue
-from apscheduler.schedulers.background import BackgroundScheduler
-import logging
 
 
 def retweet_function():
     (rate, status) = selected_tweets.get()
-    logging.warning('retweeting message with rating(' + (rate * -1) + '):\n' + status)
-    # status.retweet()
+    api = tweepy.API(auth)
+    logging.warning('retweeting message with rating(' + str(rate * -1) + '):\n' + str(status.id))
+    api.retweet(status.id)
 
 
 if __name__ == "__main__":

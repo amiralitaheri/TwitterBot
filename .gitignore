@@ -108,3 +108,6 @@ venv.bak/
 
 #vsCode
 .vscode/
+
+#config file
+config.json

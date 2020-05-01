@@ -9,3 +9,4 @@ logging.root.addHandler(console)
 file = logging.FileHandler('bot.log')
 logging.root.addHandler(file)
 
+logging.basicConfig(level=logging.WARNING)

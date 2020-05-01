@@ -1,4 +1,5 @@
 import tweepy
+import logging
 
 
 class TweetListener(tweepy.StreamListener):
@@ -14,16 +15,16 @@ class TweetListener(tweepy.StreamListener):
             self.queue.put((-1 * rating, status))
         if self.storage_handler is not None:
             self.storage_handler.store_tweet(status)
-        print(status)
+        logging.info(status)
 
     def on_error(self, status_code):
-        print(status_code)
+        logging.warning('an error return by twitter, error code :'+status_code)
 
     def on_disconnect(self, notice):
-        print(notice)
+        logging.warning(notice)
 
     def on_exception(self, exception):
-        super().on_exception(exception)
+        logging.critical(exception)
 
     def on_limit(self, track):
-        super().on_limit(track)
+        logging.warning('a limit message was return by twitter, ' + track)

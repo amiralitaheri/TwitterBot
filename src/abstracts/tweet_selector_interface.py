@@ -9,5 +9,5 @@ class TweetSelectorInterface(metaclass=abc.ABCMeta):
                 NotImplemented)
 
     @abc.abstractmethod
-    def rate_tweet(self):
+    def rate_tweet(self, status):
         raise NotImplementedError

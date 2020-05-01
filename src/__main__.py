@@ -1,6 +1,7 @@
 import tweepy
 
 from src.selectors.random_selector import RandomSelector
+from src.storagehandlers.json_storage_handler import JsonStorageHandler
 from src.twitter.authentication import authenticate_1, authenticate_2
 from src.twitter.tweet_listener import TweetListener
 from src.utils.config import Config
@@ -12,7 +13,7 @@ import logging
 def retweet_function():
     (rate, status) = selected_tweets.get()
     logging.warning('retweeting message with rating(' + (rate * -1) + '):\n' + status)
-    # todo retweet
+    # status.retweet()
 
 
 if __name__ == "__main__":
@@ -32,7 +33,9 @@ if __name__ == "__main__":
     selected_tweets = PriorityQueue()
     tweet_selector = RandomSelector()
     storage_handler = None
-    listener = TweetListener(selected_tweets, tweet_selector)
+    if config.SAVE_TWEETS:
+        storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)
+    listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
     stream = tweepy.Stream(auth=auth, listener=listener)
 
     retweet_scheduler = BackgroundScheduler()

@@ -13,7 +13,6 @@ from src.utils.config import Config
 
 def retweet_function():
     (rate, status) = selected_tweets.get()
-    api = tweepy.API(auth)
     logging.warning('retweeting message with rating(' + str(rate * -1) + '): ' + str(status.id))
     api.retweet(status.id)
 
@@ -31,6 +30,7 @@ if __name__ == "__main__":
                  + 'tracks: ' + " ".join(config.TRACKS))
 
     auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
+    api = tweepy.API(auth)
 
     selected_tweets = PriorityQueue()
     tweet_selector = RandomSelector()

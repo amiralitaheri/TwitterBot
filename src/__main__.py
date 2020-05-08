@@ -13,9 +13,9 @@ from src.utils.config import Config
 
 # this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
 def retweet_function():
-    (rate, status) = selected_tweets.get()
-    logging.warning('retweeting message with rating(' + str(rate * -1) + '): ' + str(status.id))
-    api.retweet(status.id)
+    wrapper = selected_tweets.get()
+    logging.warning('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
+    api.retweet(wrapper.status.id)
 
 
 if __name__ == "__main__":

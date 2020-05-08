@@ -25,7 +25,7 @@ class TweetListener(tweepy.StreamListener):
         logging.info(status)
 
     def on_error(self, status_code):
-        logging.warning('an error return by twitter, error code :' + status_code)
+        logging.warning('an error return by twitter, error code :' + str(status_code))
 
     def on_disconnect(self, notice):
         logging.warning(notice)
@@ -34,4 +34,4 @@ class TweetListener(tweepy.StreamListener):
         logging.critical(exception)
 
     def on_limit(self, track):
-        logging.warning('a limit message was return by twitter, ' + track)
+        logging.warning('a limit message was return by twitter, ' + str(track))

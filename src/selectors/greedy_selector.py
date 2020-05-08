@@ -13,8 +13,6 @@ class GreedySelector(TweetSelectorInterface):
 
     def rate_tweet(self, status: Status):
         rate = 0
-        if status.lang != 'fa':
-            return rate
         print(status)
         if hasattr(status, 'extended_tweet'):
             rate += self._rate_base_on_text(status.extended_tweet['full_text'])

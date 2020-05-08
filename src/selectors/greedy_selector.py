@@ -15,7 +15,11 @@ class GreedySelector(TweetSelectorInterface):
         rate = 0
         if status.lang != 'fa':
             return rate
-        rate += self._rate_base_on_text(status.text)
+        print(status)
+        if hasattr(status, 'extended_tweet'):
+            rate += self._rate_base_on_text(status.extended_tweet.full_text)
+        else:
+            rate += self._rate_base_on_text(status.text)
         rate += self._rate_base_on_user(status.user)
         return max(rate, 1)
 

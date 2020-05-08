@@ -13,7 +13,9 @@ from src.utils.config import Config
 
 # this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
 def retweet_function():
-    wrapper = selected_tweets.get()
+    if selected_tweets.qsize() == 0:
+        return
+    wrapper = selected_tweets.get(block=False)
     logging.warning('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
     api.retweet(wrapper.status.id)
 
@@ -48,7 +50,7 @@ if __name__ == "__main__":
     retweet_scheduler.start()
 
     # starting stream
-    stream.filter(track=config.TRACKS)  # todo: find out why language='fa' does not work
+    stream.filter(track=config.TRACKS[:10])  # todo: find out why language='fa' does not work
 
     # auth = authenticate_2(config.CONSUMER_KEY, config.CONSUMER_SECRET)
     # api = tweepy.API(auth)

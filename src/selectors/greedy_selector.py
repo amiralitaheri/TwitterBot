@@ -17,14 +17,15 @@ class GreedySelector(TweetSelectorInterface):
             return rate
         print(status)
         if hasattr(status, 'extended_tweet'):
-            rate += self._rate_base_on_text(status.extended_tweet.full_text)
+            rate += self._rate_base_on_text(status.extended_tweet['full_text'])
         else:
             rate += self._rate_base_on_text(status.text)
         rate += self._rate_base_on_user(status.user)
-        return max(rate, 1)
+        print(rate)
+        return min(rate, 1)
 
     def _rate_base_on_text(self, text):
-        keywords_counter, keywords_dic = self.word_counter(text)
+        keywords_counter, keywords_dic = self.word_counter(text.lower())
         if keywords_counter < 5:
             return keywords_counter * 0.2
         return 0.4  # to many keywords probably is a spam
@@ -38,14 +39,13 @@ class GreedySelector(TweetSelectorInterface):
         if user.followers_count > 1000:
             rate += 0.1
 
-        relation = self.api.lookup_friendships([self.me, user.id])[0]
-        if relation.is_following or relation.is_followed_by:
+        if user.following is not None:
             rate += 0.1
 
         if user.description is None:
             return rate
 
-        keywords_counter, keywords_dic = self.word_counter(user.description)
+        keywords_counter, keywords_dic = self.word_counter(user.description.lower())
         rate += keywords_counter * 0.1
         return rate
 

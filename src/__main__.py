@@ -4,7 +4,7 @@ from queue import PriorityQueue
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from src.selectors.random_selector import RandomSelector
+from src.selectors.greedy_selector import GreedySelector
 from src.storagehandlers.json_storage_handler import JsonStorageHandler
 from src.twitter.authentication import authenticate_1
 from src.twitter.tweet_listener import TweetListener
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     api = tweepy.API(auth)
 
     selected_tweets = PriorityQueue()
-    tweet_selector = RandomSelector()
+    tweet_selector = GreedySelector(api, config.TRACKS)
     storage_handler = None
     if config.SAVE_TWEETS:
         storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)

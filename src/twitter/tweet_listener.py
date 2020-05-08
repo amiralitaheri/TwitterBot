@@ -26,6 +26,7 @@ class TweetListener(tweepy.StreamListener):
     def on_connect(self):
         self.executor.start()
 
+
     def on_disconnect(self, notice):
         logging.warning(notice)
         self.executor.killer = True
@@ -36,6 +37,7 @@ class TweetListener(tweepy.StreamListener):
 
     def on_limit(self, track):
         logging.warning('a limit message was return by twitter, ' + str(track))
+
 
 
 class Executor(threading.Thread):

@@ -59,7 +59,7 @@ class Executor(threading.Thread):
     def handle_tweets(self):
         status = self.fifo.get()
         rating = self.selector.rate_tweet(status)  # get rating from selector
-        if rating > 0.7:  # only add tweets with rating above 0.7
+        if rating > 0.6:  # only add tweets with rating above 0.6
             # (-1 * rating) because python PQ uses min-heap(min value will pop first)
             wrapper = StatusRateWrapper()
             wrapper.status = status

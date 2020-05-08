@@ -4,7 +4,7 @@ from queue import PriorityQueue
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from src.selectors.random_selector import RandomSelector
+from src.selectors.greedy_selector import GreedySelector
 from src.storagehandlers.json_storage_handler import JsonStorageHandler
 from src.twitter.authentication import authenticate_1
 from src.twitter.tweet_listener import TweetListener
@@ -13,7 +13,9 @@ from src.utils.config import Config
 
 # this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
 def retweet_function():
-    wrapper = selected_tweets.get()
+    if selected_tweets.qsize() == 0:
+        return
+    wrapper = selected_tweets.get(block=False)
     logging.warning('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
     api.retweet(wrapper.status.id)
 
@@ -35,7 +37,7 @@ if __name__ == "__main__":
     api = tweepy.API(auth)
 
     selected_tweets = PriorityQueue()
-    tweet_selector = RandomSelector()
+    tweet_selector = GreedySelector(api, config.TRACKS)
     storage_handler = None
     if config.SAVE_TWEETS:
         storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)
@@ -48,7 +50,7 @@ if __name__ == "__main__":
     retweet_scheduler.start()
 
     # starting stream
-    stream.filter(track=config.TRACKS)  # todo: find out why language='fa' does not work
+    stream.filter(track=config.TRACKS[:10], languages=["fa"])
 
     # auth = authenticate_2(config.CONSUMER_KEY, config.CONSUMER_SECRET)
     # api = tweepy.API(auth)

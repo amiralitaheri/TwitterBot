@@ -84,6 +84,9 @@ if __name__ == "__main__":
                               id='retweet_scheduler')
     retweet_scheduler.start()
 
+    # apscheduler mostly used in web server application, it can't start a job when the main thread is terminated
+    # so this infinit loop will keep the main thread running
+    # todo: find a better way(suggestion: port hole bot to flask or django and create an gui as well)
     while True:
         time.sleep(10)
 

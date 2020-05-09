@@ -6,7 +6,7 @@ console = logging.StreamHandler(sys.stdout)
 logging.root.addHandler(console)
 
 # Code for logging to file
-file = logging.FileHandler('bot.log')
+file = logging.FileHandler('bot.log', encoding='utf-8')
 logging.root.addHandler(file)
-
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.WARNING)
+logging.root.setLevel(logging.WARNING)
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s')

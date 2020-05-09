@@ -73,8 +73,10 @@ if __name__ == "__main__":
 
     stream_scheduler = BackgroundScheduler()
     stream_scheduler.add_job(main,
+                             coalesce=True,
                              trigger='interval',
                              minutes=30,
+                             misfire_grace_time=200,
                              max_instances=1,
                              name='stream_scheduler',
                              next_run_time=datetime.now(),
@@ -86,6 +88,7 @@ if __name__ == "__main__":
     retweet_scheduler.add_job(retweet_function,
                               trigger='interval',
                               minutes=config.RETWEET_INTERVAL,
+                              misfire_grace_time=15,
                               max_instances=1,
                               name='retweet_scheduler',
                               id='retweet_scheduler')

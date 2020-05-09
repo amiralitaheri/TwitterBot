@@ -1,3 +1,5 @@
+import logging
+
 import hazm
 from tweepy import Status, API
 
@@ -15,13 +17,13 @@ class GreedySelector(TweetSelectorInterface):
         rate = 0
         if status.in_reply_to_status_id is not None:
             return rate
-        print(status)
+        logging.info(status)
         if hasattr(status, 'extended_tweet'):
             rate += self._rate_base_on_text(status.extended_tweet['full_text'])
         else:
             rate += self._rate_base_on_text(status.text)
         rate += self._rate_base_on_user(status.user)
-        print(rate)
+        logging.info(rate)
         return min(rate, 1)
 
     def _rate_base_on_text(self, text):

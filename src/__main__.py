@@ -21,9 +21,9 @@ def retweet_function():
 
     if selected_tweets.qsize() == 0:
         return
-    wrapper = selected_tweets.get(block=False)
-    logging.warning('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
-    api.retweet(wrapper.status.id)
+    (rate, status_id) = selected_tweets.get(block=False)
+    logging.warning('retweeting message with rating(' + str(rate * -1) + '): ' + str(status_id))
+    api.retweet(status_id)
 
 
 def main():

@@ -5,8 +5,6 @@ from queue import Queue
 
 import tweepy
 
-from src.utils.status_rate_wrapper import StatusRateWrapper
-
 
 class TweetListener(tweepy.StreamListener):
     def __init__(self, queue, selector, storage_handler=None):
@@ -61,9 +59,6 @@ class Executor(threading.Thread):
         rating = self.selector.rate_tweet(status)  # get rating from selector
         if rating > 0.6:  # only add tweets with rating above 0.6
             # (-1 * rating) because python PQ uses min-heap(min value will pop first)
-            wrapper = StatusRateWrapper()
-            wrapper.status = status
-            wrapper.rate = -1 * rating
-            self.queue.put(wrapper)
+            self.queue.put((-1 * rating, status.id))
         if self.storage_handler is not None:
             self.storage_handler.store_tweet(status)  # save tweets

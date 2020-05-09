@@ -50,7 +50,7 @@ if __name__ == "__main__":
     retweet_scheduler.start()
 
     # starting stream
-    stream.filter(track=config.TRACKS[:10], languages=["fa"])
+    stream.filter(track=config.TRACKS, languages=["fa"])
 
     # auth = authenticate_2(config.CONSUMER_KEY, config.CONSUMER_SECRET)
     # api = tweepy.API(auth)

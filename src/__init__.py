@@ -9,4 +9,4 @@ logging.root.addHandler(console)
 file = logging.FileHandler('bot.log')
 logging.root.addHandler(file)
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.WARNING)

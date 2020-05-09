@@ -19,12 +19,17 @@ from src.utils.config import Config
 def retweet_function():
     global selected_tweets
     global api
+    while True:
+        try:
+            if selected_tweets.qsize() == 0:
+                break
+            (rate, status_id) = selected_tweets.get(block=False)
+            logging.warning('retweeting message with rating(' + str(rate * -1) + '): ' + str(status_id))
+            api.retweet(status_id)
+            break
+        except tweepy.error.TweepError:
+            logging.warning('You have already retweeted this Tweet.')
 
-    if selected_tweets.qsize() == 0:
-        return
-    (rate, status_id) = selected_tweets.get(block=False)
-    logging.warning('retweeting message with rating(' + str(rate * -1) + '): ' + str(status_id))
-    api.retweet(status_id)
     with open('../temp_queue.json', 'w', encoding='utf-8') as queue_backup:
         json.dump(selected_tweets.queue, queue_backup)
 

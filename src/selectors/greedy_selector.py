@@ -61,5 +61,6 @@ class GreedySelector(TweetSelectorInterface):
             stemmed_word = stemmer.stem(text[i])
             if stemmed_word in keywords_dic:
                 keywords_dic[stemmed_word] += 1
-                keywords_counter += 1
+                if keywords_dic[stemmed_word] == 1:
+                    keywords_counter += 1
         return keywords_counter, keywords_dic

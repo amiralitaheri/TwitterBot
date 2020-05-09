@@ -18,3 +18,7 @@ class Config:
     SAVE_TWEETS_PATH = "/tweets"
     # custom tracks(keywords) up to 400 keywords
     TRACKS = ["computer"]
+    # languages of tracked tweets
+    LANGUAGES = ["fa"]
+    # words to filter out
+    FILTER_WORDS = ["sex", "fuck"]

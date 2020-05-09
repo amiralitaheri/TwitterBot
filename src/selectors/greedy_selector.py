@@ -7,11 +7,12 @@ from src.abstracts.tweet_selector_interface import TweetSelectorInterface
 
 
 class GreedySelector(TweetSelectorInterface):
-    def __init__(self, api: API, keywords: list):
+    def __init__(self, api: API, keywords: list, filter_words: list):
         super(GreedySelector, self).__init__()
         self.api = api
         self.keywords = keywords
         self.me = api.me().id
+        self.filter_words = filter_words
 
     def rate_tweet(self, status: Status):
         rate = 0
@@ -62,4 +63,6 @@ class GreedySelector(TweetSelectorInterface):
                 keywords_dic[stemmed_word] += 1
                 if keywords_dic[stemmed_word] == 1:
                     keywords_counter += 1
+            if stemmed_word in self.filter_words:
+                return 0, {}
         return keywords_counter, keywords_dic

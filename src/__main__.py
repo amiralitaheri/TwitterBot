@@ -52,14 +52,14 @@ def main():
         auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
         api = tweepy.API(auth)
 
-        tweet_selector = GreedySelector(api, config.TRACKS)
+        tweet_selector = GreedySelector(api, config.TRACKS, config.FILTER_WORDS)
         storage_handler = None
         if config.SAVE_TWEETS:
             storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)
         listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
         stream = tweepy.Stream(auth=auth, listener=listener)
         # starting stream
-        stream.filter(track=config.TRACKS, languages=["fa"])
+        stream.filter(track=config.TRACKS[1:], languages=config.LANGUAGES)
     except Exception:
         logging.error("Unexpected error: " + str(sys.exc_info()))
 

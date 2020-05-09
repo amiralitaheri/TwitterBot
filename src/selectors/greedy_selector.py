@@ -15,6 +15,8 @@ class GreedySelector(TweetSelectorInterface):
 
     def rate_tweet(self, status: Status):
         rate = 0
+        if status.user.followers_count < 3:
+            rate -= 0.3
         if status.in_reply_to_status_id is not None:
             rate -= 0.3
         logging.info(status)

@@ -1,4 +1,6 @@
 import logging
+import sys
+import time
 from datetime import datetime
 from queue import PriorityQueue
 
@@ -10,10 +12,6 @@ from src.storagehandlers.json_storage_handler import JsonStorageHandler
 from src.twitter.authentication import authenticate_1
 from src.twitter.tweet_listener import TweetListener
 from src.utils.config import Config
-
-# global vars
-selected_tweets = None
-api = None
 
 
 # this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
@@ -37,23 +35,25 @@ def main():
     if not config.TRACKS:
         config.TRACKS = ['twitter']
 
-    logging.info('starting config:'
-                 + 'retweet interval: ' + str(config.RETWEET_INTERVAL)
-                 + 'save_tweets: ' + str(config.SAVE_TWEETS)
-                 + 'save_tweets_path: ' + config.SAVE_TWEETS_PATH
-                 + 'tracks: ' + " ".join(config.TRACKS))
+    logging.warning('starting config:'
+                    + '\nretweet interval: ' + str(config.RETWEET_INTERVAL)
+                    + '\nsave_tweets: ' + str(config.SAVE_TWEETS)
+                    + '\nsave_tweets_path: ' + config.SAVE_TWEETS_PATH
+                    + '\ntracks: ' + " ".join(config.TRACKS))
+    try:
+        auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
+        api = tweepy.API(auth)
 
-    auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
-    api = tweepy.API(auth)
-
-    tweet_selector = GreedySelector(api, config.TRACKS)
-    storage_handler = None
-    if config.SAVE_TWEETS:
-        storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)
-    listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
-    stream = tweepy.Stream(auth=auth, listener=listener)
-    # starting stream
-    stream.filter(track=config.TRACKS, languages=["fa"])
+        tweet_selector = GreedySelector(api, config.TRACKS)
+        storage_handler = None
+        if config.SAVE_TWEETS:
+            storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)
+        listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
+        stream = tweepy.Stream(auth=auth, listener=listener)
+        # starting stream
+        stream.filter(track=config.TRACKS, languages=["fa"])
+    except Exception:
+        logging.error("Unexpected error: " + str(sys.exc_info()))
 
 
 if __name__ == "__main__":
@@ -83,6 +83,9 @@ if __name__ == "__main__":
                               name='retweet_scheduler',
                               id='retweet_scheduler')
     retweet_scheduler.start()
+
+    while True:
+        time.sleep(10)
 
     # auth = authenticate_2(config.CONSUMER_KEY, config.CONSUMER_SECRET)
     # api = tweepy.API(auth)

@@ -1,3 +1,4 @@
+import json
 import logging
 import sys
 import time
@@ -24,6 +25,8 @@ def retweet_function():
     (rate, status_id) = selected_tweets.get(block=False)
     logging.warning('retweeting message with rating(' + str(rate * -1) + '): ' + str(status_id))
     api.retweet(status_id)
+    with open('../temp_queue.json', 'w', encoding='utf-8') as queue_backup:
+        json.dump(selected_tweets.queue, queue_backup)
 
 
 def main():
@@ -63,6 +66,10 @@ if __name__ == "__main__":
         config = Config(file)
 
     selected_tweets = PriorityQueue()
+    with open("../temp_queue.json", "r") as read_file:
+        queue_backup = json.load(read_file)
+        for rate_id_tuple in queue_backup:
+            selected_tweets.put(rate_id_tuple)
 
     stream_scheduler = BackgroundScheduler()
     stream_scheduler.add_job(main,

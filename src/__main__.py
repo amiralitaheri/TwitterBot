@@ -69,7 +69,8 @@ if __name__ == "__main__":
     with open("../temp_queue.json", "r") as read_file:
         queue_backup = json.load(read_file)
         for rate_id_tuple in queue_backup:
-            selected_tweets.put(rate_id_tuple)
+            (rate, status_id) = rate_id_tuple
+            selected_tweets.put((rate, status_id))
 
     stream_scheduler = BackgroundScheduler()
     stream_scheduler.add_job(main,

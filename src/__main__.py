@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from queue import PriorityQueue
 
 import tweepy
@@ -10,9 +11,16 @@ from src.twitter.authentication import authenticate_1
 from src.twitter.tweet_listener import TweetListener
 from src.utils.config import Config
 
+# global vars
+selected_tweets = None
+api = None
+
 
 # this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
 def retweet_function():
+    global selected_tweets
+    global api
+
     if selected_tweets.qsize() == 0:
         return
     wrapper = selected_tweets.get(block=False)
@@ -20,10 +28,12 @@ def retweet_function():
     api.retweet(wrapper.status.id)
 
 
-if __name__ == "__main__":
-    # load configs from file
-    with open('../config.json', 'r', encoding="utf-8") as file:
-        config = Config(file)
+def main():
+    # globals
+    global selected_tweets
+    global api
+    global config
+
     if not config.TRACKS:
         config.TRACKS = ['twitter']
 
@@ -36,21 +46,43 @@ if __name__ == "__main__":
     auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
     api = tweepy.API(auth)
 
-    selected_tweets = PriorityQueue()
     tweet_selector = GreedySelector(api, config.TRACKS)
     storage_handler = None
     if config.SAVE_TWEETS:
         storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)
     listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
     stream = tweepy.Stream(auth=auth, listener=listener)
+    # starting stream
+    stream.filter(track=config.TRACKS, languages=["fa"])
+
+
+if __name__ == "__main__":
+    global config
+    # load configs from file
+    with open('../config.json', 'r', encoding="utf-8") as file:
+        config = Config(file)
+
+    selected_tweets = PriorityQueue()
+
+    stream_scheduler = BackgroundScheduler()
+    stream_scheduler.add_job(main,
+                             trigger='interval',
+                             minutes=30,
+                             max_instances=1,
+                             name='stream_scheduler',
+                             next_run_time=datetime.now(),
+                             id='stream_scheduler')
+    stream_scheduler.start()
 
     # scheduler to call retweet_function in intervals
     retweet_scheduler = BackgroundScheduler()
-    retweet_scheduler.add_job(retweet_function, trigger='interval', minutes=config.RETWEET_INTERVAL, max_instances=1)
+    retweet_scheduler.add_job(retweet_function,
+                              trigger='interval',
+                              minutes=config.RETWEET_INTERVAL,
+                              max_instances=1,
+                              name='retweet_scheduler',
+                              id='retweet_scheduler')
     retweet_scheduler.start()
-
-    # starting stream
-    stream.filter(track=config.TRACKS, languages=["fa"])
 
     # auth = authenticate_2(config.CONSUMER_KEY, config.CONSUMER_SECRET)
     # api = tweepy.API(auth)

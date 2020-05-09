@@ -16,7 +16,7 @@ class GreedySelector(TweetSelectorInterface):
     def rate_tweet(self, status: Status):
         rate = 0
         if status.in_reply_to_status_id is not None:
-            return rate
+            rate -= 0.3
         logging.info(status)
         if hasattr(status, 'extended_tweet'):
             rate += self._rate_base_on_text(status.extended_tweet['full_text'])
@@ -49,7 +49,7 @@ class GreedySelector(TweetSelectorInterface):
 
         keywords_counter, keywords_dic = self.word_counter(user.description.lower())
         rate += keywords_counter * 0.1
-        return min(rate, 0.3)
+        return min(rate, 0.33)
 
     def word_counter(self, text):
         text = hazm.Normalizer().normalize(text)

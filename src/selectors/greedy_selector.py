@@ -16,10 +16,9 @@ class GreedySelector(TweetSelectorInterface):
 
     def rate_tweet(self, status: Status):
         rate = 0
-        if status.user.followers_count < 3:
-            rate -= 0.3
+
         if status.in_reply_to_status_id is not None:
-            rate -= 0.3
+            rate -= 0.4
         logging.info(status)
         if hasattr(status, 'extended_tweet'):
             rate += self._rate_base_on_text(status.extended_tweet['full_text'])
@@ -37,6 +36,9 @@ class GreedySelector(TweetSelectorInterface):
 
     def _rate_base_on_user(self, user):
         rate = 0.0
+
+        if user.followers_count < 20:
+            rate -= 0.3
 
         if user.followers_count > 1000:
             rate += 0.03

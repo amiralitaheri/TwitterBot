@@ -1,6 +1,6 @@
 import random
 
-from src.abstracts.tweet_selector_interface import TweetSelectorInterface
+from abstracts.tweet_selector_interface import TweetSelectorInterface
 
 
 # RandomSelector will rate tweets randomly

@@ -29,7 +29,7 @@ class GreedySelector(TweetSelectorInterface):
         return min(rate, 1)
 
     def _rate_base_on_text(self, text):
-        keywords_counter, keywords_dic = self.word_counter(text.lower())
+        keywords_counter, keywords_dic = self.word_counter(text)
         if keywords_counter < 6:
             return keywords_counter * 0.2
         return 0.4  # to many keywords probably is a spam
@@ -49,11 +49,16 @@ class GreedySelector(TweetSelectorInterface):
         if user.description is None:
             return rate
 
-        keywords_counter, keywords_dic = self.word_counter(user.description.lower())
+        keywords_counter, keywords_dic = self.word_counter(user.description)
         rate += keywords_counter * 0.1
         return min(rate, 0.33)
 
     def word_counter(self, text):
+        text = text.lower()
+        text = text.translate(str.maketrans(
+            {'#': ' ', '$': ' ', '/': ' ', '+': ' ', '=': ' ', ':': ' ', ',': ' ', ';': ' ', '؛': ' ', '،': ' ',
+             '.': ' ', '!': ' ', '؟': ' ', '?': ' ', '«': ' ', '»': ' ', '(': ' ', ')': ' ', '_': ' ', '-': ' ',
+             '@': ' '}))
         text = hazm.Normalizer().normalize(text)
         text = hazm.word_tokenize(text)
         stemmer = hazm.Stemmer()

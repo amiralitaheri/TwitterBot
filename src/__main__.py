@@ -8,11 +8,11 @@ from queue import PriorityQueue
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from src.selectors.greedy_selector import GreedySelector
-from src.storagehandlers.json_storage_handler import JsonStorageHandler
-from src.twitter.authentication import authenticate_1
-from src.twitter.tweet_listener import TweetListener
-from src.utils.config import Config
+from storagehandlers.json_storage_handler import JsonStorageHandler
+from tweetselectors.greedy_selector import GreedySelector
+from twitter.authentication import authenticate_1
+from twitter.tweet_listener import TweetListener
+from utils.config import Config
 
 
 # this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
@@ -59,7 +59,7 @@ def main():
         listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
         stream = tweepy.Stream(auth=auth, listener=listener)
         # starting stream
-        stream.filter(track=config.TRACKS[1:], languages=config.LANGUAGES)
+        stream.filter(track=config.TRACKS[6:], languages=config.LANGUAGES)
     except Exception:
         logging.error("Unexpected error: " + str(sys.exc_info()))
 

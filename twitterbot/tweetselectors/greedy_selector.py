@@ -2,8 +2,7 @@ import logging
 
 import hazm
 from tweepy import Status, API
-
-from src.abstracts.tweet_selector_interface import TweetSelectorInterface
+from twitterbot.abstracts.tweet_selector_interface import TweetSelectorInterface
 
 
 class GreedySelector(TweetSelectorInterface):

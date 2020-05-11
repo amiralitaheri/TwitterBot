@@ -8,6 +8,7 @@
   "SAVE_TWEETS_PATH": "/tweets",
   "LANGUAGES": ["fa","en"],
   "FILTER_WORDS": ["fuck","sex"],
+  "START_INDEX":0,
   "TRACKS": [
     "computer",
     "I_Hate_Python",

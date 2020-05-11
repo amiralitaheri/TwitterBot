@@ -59,7 +59,7 @@ def main():
         listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
         stream = tweepy.Stream(auth=auth, listener=listener)
         # starting stream
-        stream.filter(track=config.TRACKS[6:], languages=config.LANGUAGES)
+        stream.filter(track=config.TRACKS[config.START_INDEX:], languages=config.LANGUAGES)
     except Exception:
         logging.error("Unexpected error: " + str(sys.exc_info()))
 

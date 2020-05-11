@@ -16,6 +16,8 @@ class Config:
     # tweets save
     SAVE_TWEETS = False
     SAVE_TWEETS_PATH = "/tweets"
+    # number of elements to skip from track but include as key word
+    START_INDEX = 0
     # custom tracks(keywords) up to 400 keywords
     TRACKS = ["computer"]
     # languages of tracked tweets

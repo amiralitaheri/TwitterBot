@@ -1,5 +1,6 @@
 import json
 import logging
+import signal
 import sys
 import time
 from datetime import datetime
@@ -63,6 +64,13 @@ def main():
         logging.error("Unexpected error: " + str(sys.exc_info()))
 
 
+def keyboard_interrupt_handler(signal_input, frame):
+    print("KeyboardInterrupt (ID: {}) has been caught. exiting".format(signal_input))
+    stream_scheduler.shutdown(wait=False)
+    retweet_scheduler.shutdown(wait=False)
+    exit(0)
+
+
 if __name__ == "__main__":
     global config
     # load configs from file
@@ -98,6 +106,9 @@ if __name__ == "__main__":
                               name='retweet_scheduler',
                               id='retweet_scheduler')
     retweet_scheduler.start()
+
+    # registering interrupt handler
+    signal.signal(signal.SIGINT, keyboard_interrupt_handler)
 
     # apscheduler mostly used in web server application, it can't start a job when the main thread is terminated
     # so this infinit loop will keep the main thread running

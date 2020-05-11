@@ -6,6 +6,8 @@
   "RETWEET_INTERVAL": 10,
   "SAVE_TWEETS": false,
   "SAVE_TWEETS_PATH": "/tweets",
+  "LANGUAGES": ["fa","en"],
+  "FILTER_WORDS": ["fuck","sex"],
   "TRACKS": [
     "computer",
     "I_Hate_Python",

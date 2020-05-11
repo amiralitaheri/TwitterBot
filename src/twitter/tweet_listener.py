@@ -61,7 +61,7 @@ class Executor(threading.Thread):
         if rating > 0.6:  # only add tweets with rating above 0.6
             # (-1 * rating) because python PQ uses min-heap(min value will pop first)
             self.queue.put((-1 * rating, status.id))
-            with open('../temp_queue.json', 'w', encoding='utf-8') as queue_backup:
+            with open('temp_queue.json', 'w', encoding='utf-8') as queue_backup:
                 json.dump(self.queue.queue, queue_backup)
         if self.storage_handler is not None:
             self.storage_handler.store_tweet(status)  # save tweets

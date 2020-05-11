@@ -7,7 +7,6 @@ from queue import PriorityQueue
 
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
-
 from src.storagehandlers.json_storage_handler import JsonStorageHandler
 from src.tweetselectors.greedy_selector import GreedySelector
 from src.twitter.authentication import authenticate_1
@@ -30,7 +29,7 @@ def retweet_function():
         except tweepy.error.TweepError:
             logging.warning('You have already retweeted this Tweet.')
 
-    with open('../temp_queue.json', 'w', encoding='utf-8') as queue_backup:
+    with open('temp_queue.json', 'w', encoding='utf-8') as queue_backup:
         json.dump(selected_tweets.queue, queue_backup)
 
 
@@ -67,11 +66,11 @@ def main():
 if __name__ == "__main__":
     global config
     # load configs from file
-    with open('../config.json', 'r', encoding="utf-8") as file:
+    with open('config.json', 'r', encoding="utf-8") as file:
         config = Config(file)
 
     selected_tweets = PriorityQueue()
-    with open("../temp_queue.json", "r") as read_file:
+    with open("temp_queue.json", "r") as read_file:
         queue_backup = json.load(read_file)
         for rate_id_tuple in queue_backup:
             (rate, status_id) = rate_id_tuple

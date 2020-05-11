@@ -1,6 +1,6 @@
 import logging
 
-from abstracts.storage_handler_interface import StorageHandlerInterface
+from src.abstracts.storage_handler_interface import StorageHandlerInterface
 
 
 class JsonStorageHandler(StorageHandlerInterface):

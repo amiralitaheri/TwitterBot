@@ -8,11 +8,11 @@ from queue import PriorityQueue
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from storagehandlers.json_storage_handler import JsonStorageHandler
-from tweetselectors.greedy_selector import GreedySelector
-from twitter.authentication import authenticate_1
-from twitter.tweet_listener import TweetListener
-from utils.config import Config
+from src.storagehandlers.json_storage_handler import JsonStorageHandler
+from src.tweetselectors.greedy_selector import GreedySelector
+from src.twitter.authentication import authenticate_1
+from src.twitter.tweet_listener import TweetListener
+from src.utils.config import Config
 
 
 # this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it

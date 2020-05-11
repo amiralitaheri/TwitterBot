@@ -3,7 +3,7 @@ import logging
 import hazm
 from tweepy import Status, API
 
-from abstracts.tweet_selector_interface import TweetSelectorInterface
+from src.abstracts.tweet_selector_interface import TweetSelectorInterface
 
 
 class GreedySelector(TweetSelectorInterface):

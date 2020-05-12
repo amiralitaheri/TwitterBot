@@ -12,9 +12,11 @@ Assuming that you already have your Twitter developer account you should follow 
 1. Clone the repository into your machine using commend below  
     ```git clone https://github.com/amiralitaheri/TwitterBot.git``` 
 2. Go to the cloned directory  
-    ```cd twitter bot```
-3. Create the ```config.json``` file by using the ```config.json.sample``` and add your tokens and custom configurations
-4. Run the app  
+    ```cd twitter bot```  
+3. install the requirements by running   
+    ```pip install -r requirements.txt```
+4. Create the ```config.json``` file by using the ```config.json.sample``` and add your tokens and custom configurations
+5. Run the app  
 ```python -m twitterbot```
 
 ### How to contribute

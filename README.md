@@ -24,7 +24,7 @@ Any improvement to performance, functionality and etc are welcomed.
 
 You could start by creating your own custom tweet selector, just create a python file in ```twitterbot/tweetselectors```,
  create a python class that inherit from ```twitterbot.abstracts.tweet_selector_interface.TweetSelectorInterface``` and
- impalement the rate_tweet tweet function, then changed the ```main``` function in ```__main__.py``` to use your tweet selector.
+ impalement the ```rate_tweet``` function, then changed the ```main``` function in ```__main__.py``` to use your tweet selector.
 
 Please note that greedy_selector is created for Persian language. 
 

@@ -8,6 +8,7 @@
   "SAVE_TWEETS_PATH": "/tweets",
   "LANGUAGES": ["fa","en"],
   "FILTER_WORDS": ["fuck","sex"],
+  "BLACK_LIST": ["787555147778064384"],
   "START_INDEX":0,
   "TRACKS": [
     "computer",

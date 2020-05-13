@@ -52,7 +52,7 @@ def main():
         auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
         api = tweepy.API(auth)
 
-        tweet_selector = GreedySelector(api, config.TRACKS, config.FILTER_WORDS)
+        tweet_selector = GreedySelector(api, config.TRACKS, config.FILTER_WORDS, config.BLACK_LIST)
         storage_handler = None
         if config.SAVE_TWEETS:
             storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)

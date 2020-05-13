@@ -24,3 +24,5 @@ class Config:
     LANGUAGES = ["fa"]
     # words to filter out
     FILTER_WORDS = ["sex", "fuck"]
+    # users blacklist
+    BLACK_LIST = ["45645645646"]

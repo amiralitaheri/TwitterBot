@@ -6,16 +6,18 @@ from twitterbot.abstracts.tweet_selector_interface import TweetSelectorInterface
 
 
 class GreedySelector(TweetSelectorInterface):
-    def __init__(self, api: API, keywords: list, filter_words: list):
+    def __init__(self, api: API, keywords: list, filter_words: list, user_black_list: list):
         super(GreedySelector, self).__init__()
         self.api = api
         self.keywords = keywords
         self.me = api.me().id
         self.filter_words = filter_words
+        self.user_black_list = user_black_list
 
     def rate_tweet(self, status: Status):
         rate = 0
-
+        if status.user.id_str in self.user_black_list:
+            return rate
         if status.in_reply_to_status_id is not None:
             rate -= 0.4
         logging.info(status)

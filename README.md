@@ -1,5 +1,9 @@
 # TwitterBot
 
+![GitHub repo size](https://img.shields.io/github/repo-size/amiralitaheri/TwitterBot)
+![GitHub issues](https://img.shields.io/github/issues/amiralitaheri/TwitterBot)
+![GitHub](https://img.shields.io/github/license/amiralitaheri/TwitterBot)
+
 ### follow me on Twitter
 You can follow the bot on twitter to see actual result of the bot.  
 [**Follow ProgrammerBotF On Twitter**](https://twitter.com/ProgrammerBotF) 

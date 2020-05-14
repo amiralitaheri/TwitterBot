@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="TwitterBot",
-    version="2020.4.30",
+    version="2020.5.15",
     author="Amirali Taheri",
     author_email="amiralitaheri64@gmail.com",
     description="a Twitter bot that will find and retweet computer engineering related tweets",
@@ -15,7 +15,7 @@ setuptools.setup(
     url="https://github.com/amiralitaheri/TwitterBot",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",

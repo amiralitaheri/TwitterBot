@@ -3,6 +3,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/amiralitaheri/TwitterBot)
 ![GitHub issues](https://img.shields.io/github/issues/amiralitaheri/TwitterBot)
 ![GitHub](https://img.shields.io/github/license/amiralitaheri/TwitterBot)
+![Twitter Follow](https://img.shields.io/twitter/follow/ProgrammerBotF?style=social)
 
 ### Follow me on Twitter
 You can follow the bot on twitter to see actual result of the bot.  

@@ -1,4 +1,3 @@
-import json
 import logging
 import signal
 import sys
@@ -6,6 +5,7 @@ import time
 from datetime import datetime
 from queue import PriorityQueue
 
+import requests
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
 from twitterbot.storagehandlers.json_storage_handler import JsonStorageHandler
@@ -13,23 +13,36 @@ from twitterbot.tweetselectors.greedy_selector import GreedySelector
 from twitterbot.twitter.authentication import authenticate_1
 from twitterbot.twitter.tweet_listener import TweetListener
 from twitterbot.utils.config import Config
-
-
 # this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
-def retweet_function(selected_tweets, api):
+from twitterbot.utils.status_rate_wrapper import StatusRateWrapper
+
+
+def retweet_function(selected_tweets, api, telegram, telegram_token, channel_id):
+    succeeded = False
     while True:
         try:
             if selected_tweets.qsize() == 0:
                 break
-            (rate, status_id) = selected_tweets.get(block=False)
-            logging.warning('retweeting message with rating(' + str(rate * -1) + '): ' + str(status_id))
-            api.retweet(status_id)
+            wrapper: StatusRateWrapper = selected_tweets.get(block=False)
+            logging.warning('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
+            api.retweet(wrapper.status.id)
+            succeeded = True
             break
         except tweepy.error.TweepError:
             logging.warning('You have already retweeted this Tweet.')
-
-    with open('temp_queue.json', 'w', encoding='utf-8') as queue_backup:
-        json.dump(selected_tweets.queue, queue_backup)
+    if telegram and succeeded:
+        tweet_link = "https://twitter.com/" + wrapper.status.user.screen_name + "/status/" + wrapper.status.id_str
+        print("channel_id" + str(channel_id))
+        payload = {
+            'chat_id': channel_id,
+            'text': tweet_link,
+            'parse_mode': 'HTML'
+        }
+        try:
+            print(requests.post("https://api.telegram.org/bot{token}/sendMessage".format(token=telegram_token),
+                                data=payload).content)
+        except Exception:
+            logging.warning("Can't post on telegram")
 
 
 def stream_tweets(selected_tweets, api, config, auth):
@@ -67,14 +80,6 @@ def main():
         config = Config(file)
 
     selected_tweets = PriorityQueue()
-    try:
-        with open("temp_queue.json", "r") as read_file:
-            queue_backup = json.load(read_file)
-            for rate_id_tuple in queue_backup:
-                (rate, status_id) = rate_id_tuple
-                selected_tweets.put((rate, status_id))
-    except IOError:
-        pass
 
     auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
     api = tweepy.API(auth)
@@ -93,7 +98,8 @@ def main():
 
     # scheduler to call retweet_function in intervals
     retweet_scheduler.add_job(retweet_function,
-                              args=[selected_tweets, api],
+                              args=[selected_tweets, api, config.TELEGRAM, config.TELEGRAM_BOT_TOKEN,
+                                    config.TELEGRAM_CHANNEL_ID],
                               trigger='interval',
                               minutes=config.RETWEET_INTERVAL,
                               misfire_grace_time=15,

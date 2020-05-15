@@ -1,10 +1,10 @@
-import json
 import logging
 import threading
 import time
 from queue import Queue
 
 import tweepy
+from twitterbot.utils.status_rate_wrapper import StatusRateWrapper
 
 
 class TweetListener(tweepy.StreamListener):
@@ -59,9 +59,11 @@ class Executor(threading.Thread):
         status = self.fifo.get()
         rating = self.selector.rate_tweet(status)  # get rating from selector
         if rating > 0.6:  # only add tweets with rating above 0.6
+            wrapper = StatusRateWrapper()
+            wrapper.status = status
+            wrapper.rate = -1 * rating
             # (-1 * rating) because python PQ uses min-heap(min value will pop first)
-            self.queue.put((-1 * rating, status.id))
-            with open('temp_queue.json', 'w', encoding='utf-8') as queue_backup:
-                json.dump(self.queue.queue, queue_backup)
+            self.queue.put(wrapper)
+
         if self.storage_handler is not None:
             self.storage_handler.store_tweet(status)  # save tweets

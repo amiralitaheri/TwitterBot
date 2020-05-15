@@ -24,12 +24,12 @@ def retweet_function(selected_tweets, api, telegram, telegram_token, channel_id)
             if selected_tweets.qsize() == 0:
                 break
             wrapper: StatusRateWrapper = selected_tweets.get(block=False)
-            logging.warning('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
+            logging.info('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
             api.retweet(wrapper.status.id)
             succeeded = True
             break
         except tweepy.error.TweepError:
-            logging.warning('You have already retweeted this Tweet.')
+            logging.info('You have already retweeted this Tweet.')
     if telegram and succeeded:
         tweet_link = "https://twitter.com/" + wrapper.status.user.screen_name + "/status/" + wrapper.status.id_str
         print("channel_id" + str(channel_id))

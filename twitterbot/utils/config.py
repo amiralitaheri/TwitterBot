@@ -26,3 +26,7 @@ class Config:
     FILTER_WORDS = ["sex", "fuck"]
     # users blacklist
     BLACK_LIST = ["45645645646"]
+    # telegram channel info
+    TELEGRAM = False
+    TELEGRAM_BOT_TOKEN = ""
+    TELEGRAM_CHANNEL_ID = ""

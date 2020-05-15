@@ -5,10 +5,10 @@ import time
 from datetime import datetime
 from queue import PriorityQueue
 
-import requests
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
 from twitterbot.storagehandlers.json_storage_handler import JsonStorageHandler
+from twitterbot.telegram.telegram import Telegram
 from twitterbot.tweetselectors.greedy_selector import GreedySelector
 from twitterbot.twitter.authentication import authenticate_1
 from twitterbot.twitter.tweet_listener import TweetListener
@@ -31,16 +31,8 @@ def retweet_function(selected_tweets, api, telegram, telegram_token, channel_id)
         except tweepy.error.TweepError:
             logging.info('You have already retweeted this Tweet.')
     if telegram and succeeded:
-        tweet_link = "https://twitter.com/" + wrapper.status.user.screen_name + "/status/" + wrapper.status.id_str
-        print("channel_id" + str(channel_id))
-        payload = {
-            'chat_id': channel_id,
-            'text': tweet_link,
-            'parse_mode': 'HTML'
-        }
         try:
-            print(requests.post("https://api.telegram.org/bot{token}/sendMessage".format(token=telegram_token),
-                                data=payload).content)
+            Telegram.post_tweet_link(wrapper.status, telegram_token, channel_id)
         except Exception:
             logging.warning("Can't post on telegram")
 

@@ -4,9 +4,13 @@
 ![GitHub issues](https://img.shields.io/github/issues/amiralitaheri/TwitterBot)
 ![GitHub](https://img.shields.io/github/license/amiralitaheri/TwitterBot)
 
-### follow me on Twitter
+### Follow me on Twitter
 You can follow the bot on twitter to see actual result of the bot.  
 [**Follow ProgrammerBotF On Twitter**](https://twitter.com/ProgrammerBotF) 
+
+### Follow me on Telegram
+I will post selected tweets on my Telegram channel.  
+[**Join The Telegram Channel**](https://t.me/ProgrammerBotFarsi)
 
 ### How to it for your own bot
 For using this bot you need a Twitter developer account, you can apply for one at this link https://developer.twitter.com/en/apply-for-access

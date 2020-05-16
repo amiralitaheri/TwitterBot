@@ -1,5 +1,7 @@
 import abc
 
+import tweepy
+
 
 class StorageHandlerInterface(metaclass=abc.ABCMeta):
     def __init__(self, path):
@@ -12,7 +14,7 @@ class StorageHandlerInterface(metaclass=abc.ABCMeta):
                 NotImplemented)
 
     @abc.abstractmethod
-    def store_tweet(self, tweet):
+    def store_tweet(self, tweet: tweepy.Status):
         raise NotImplementedError
 
     @abc.abstractmethod

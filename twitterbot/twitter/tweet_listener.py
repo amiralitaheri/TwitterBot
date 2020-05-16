@@ -1,14 +1,17 @@
 import logging
 import threading
 import time
-from queue import Queue
+from queue import Queue, PriorityQueue
 
 import tweepy
+from twitterbot.abstracts.storage_handler_interface import StorageHandlerInterface
+from twitterbot.abstracts.tweet_selector_interface import TweetSelectorInterface
 from twitterbot.utils.status_rate_wrapper import StatusRateWrapper
 
 
 class TweetListener(tweepy.StreamListener):
-    def __init__(self, queue, selector, storage_handler=None):
+    def __init__(self, queue: PriorityQueue, selector: TweetSelectorInterface,
+                 storage_handler: StorageHandlerInterface = None):
         super().__init__()
         self.queue = queue
         self.selector = selector
@@ -38,7 +41,8 @@ class TweetListener(tweepy.StreamListener):
 
 
 class Executor(threading.Thread):
-    def __init__(self, fifo, queue, selector, storage_handler):
+    def __init__(self, fifo: Queue, queue: PriorityQueue, selector: TweetSelectorInterface,
+                 storage_handler: StorageHandlerInterface):
         super().__init__()
         self.fifo = fifo
         self.queue = queue
@@ -56,13 +60,12 @@ class Executor(threading.Thread):
                 self.handle_tweets()
 
     def handle_tweets(self):
-        status = self.fifo.get()
-        rating = self.selector.rate_tweet(status)  # get rating from selector
+        status: tweepy.Status = self.fifo.get()
+        rating: float = self.selector.rate_tweet(status)  # get rating from selector
         if rating > 0.6:  # only add tweets with rating above 0.6
             wrapper = StatusRateWrapper()
             wrapper.status = status
-            wrapper.rate = -1 * rating
-            # (-1 * rating) because python PQ uses min-heap(min value will pop first)
+            wrapper.rate = -1 * rating  # (-1 * rating) because python PQ uses min-heap(min value will pop first)
             self.queue.put(wrapper)
 
         if self.storage_handler is not None:

@@ -1,5 +1,7 @@
 import abc
 
+import tweepy
+
 
 class TweetSelectorInterface(metaclass=abc.ABCMeta):
     @classmethod
@@ -8,7 +10,6 @@ class TweetSelectorInterface(metaclass=abc.ABCMeta):
                 callable(subclass.rate_tweet) or
                 NotImplemented)
 
-    # should return a double in range [0,1)
     @abc.abstractmethod
-    def rate_tweet(self, status):
+    def rate_tweet(self, status: tweepy.Status) -> float:
         raise NotImplementedError

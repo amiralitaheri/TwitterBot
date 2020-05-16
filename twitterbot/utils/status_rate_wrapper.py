@@ -1,7 +1,10 @@
+import tweepy
+
+
 class StatusRateWrapper:
     def __init__(self):
-        self.status = None
-        self.rate = 0
+        self.status: tweepy.Status = None
+        self.rate = 0.0
 
     def __str__(self):
         return f'Number is {self.rate}'

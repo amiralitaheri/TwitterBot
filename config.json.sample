@@ -14,8 +14,8 @@
   "BLACK_LIST": ["787555147778064384"],
   "START_INDEX":0,
   "TRACKS": [
-    "computer",
-    "I_Hate_Python",
-    "dart"
+    "computer":0.5,
+    "I_Hate_Python":0.7,
+    "dart":0.1
   ]
 }

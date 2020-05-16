@@ -1,12 +1,13 @@
 import logging
 
 import hazm
+import tweepy
 from tweepy import Status, API
 from twitterbot.abstracts.tweet_selector_interface import TweetSelectorInterface
 
 
 class GreedySelector(TweetSelectorInterface):
-    def __init__(self, api: API, keywords: list, filter_words: list, user_black_list: list):
+    def __init__(self, api: API, keywords: dict, filter_words: list, user_black_list: list):
         super(GreedySelector, self).__init__()
         self.api = api
         self.keywords = keywords
@@ -14,8 +15,8 @@ class GreedySelector(TweetSelectorInterface):
         self.filter_words = filter_words
         self.user_black_list = user_black_list
 
-    def rate_tweet(self, status: Status):
-        rate = 0
+    def rate_tweet(self, status: Status) -> float:
+        rate = 0.0
         if status.user.id_str in self.user_black_list:
             return rate
         if status.in_reply_to_status_id is not None:
@@ -29,13 +30,11 @@ class GreedySelector(TweetSelectorInterface):
         logging.info(rate)
         return min(rate, 1)
 
-    def _rate_base_on_text(self, text):
-        keywords_counter, keywords_dic = self.word_counter(text)
-        if keywords_counter < 6:
-            return keywords_counter * 0.2
-        return 0.4  # to many keywords probably is a spam
+    def _rate_base_on_text(self, text: str) -> float:
+        value, keywords_dic = self.word_counter(text)
+        return value
 
-    def _rate_base_on_user(self, user):
+    def _rate_base_on_user(self, user: tweepy.User) -> float:
         rate = 0.0
 
         if user.followers_count < 20:
@@ -50,11 +49,11 @@ class GreedySelector(TweetSelectorInterface):
         if user.description is None:
             return rate
 
-        keywords_counter, keywords_dic = self.word_counter(user.description)
-        rate += keywords_counter * 0.1
+        value, keywords_dic = self.word_counter(user.description)
+        rate += value / 3
         return min(rate, 0.33)
 
-    def word_counter(self, text):
+    def word_counter(self, text: str) -> (float, dict):
         text = text.lower()
         text = text.translate(str.maketrans(
             {'#': ' ', '$': ' ', '/': ' ', '+': ' ', '=': ' ', ':': ' ', ',': ' ', ';': ' ', '؛': ' ', '،': ' ',
@@ -63,14 +62,14 @@ class GreedySelector(TweetSelectorInterface):
         text = hazm.Normalizer().normalize(text)
         text = hazm.word_tokenize(text)
         stemmer = hazm.Stemmer()
-        keywords_dic = {word: 0 for word in self.keywords}
-        keywords_counter = 0
+        keywords_dic = {word: 0 for word in self.keywords.keys()}
+        value = 0.0
         for i in range(len(text)):
             stemmed_word = stemmer.stem(text[i])
             if stemmed_word in keywords_dic:
                 keywords_dic[stemmed_word] += 1
-                if keywords_dic[stemmed_word] == 1:
-                    keywords_counter += 1
+                if keywords_dic[stemmed_word] == 1:  # count each word only once
+                    value += self.keywords[stemmed_word]
             if stemmed_word in self.filter_words:
                 return 0, {}
-        return keywords_counter, keywords_dic
+        return value, keywords_dic

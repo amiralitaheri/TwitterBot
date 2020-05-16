@@ -2,6 +2,7 @@ import logging
 import signal
 import sys
 import time
+import traceback
 from datetime import datetime
 from queue import PriorityQueue
 
@@ -37,7 +38,7 @@ def retweet_function(selected_tweets, api, telegram, telegram_token, channel_id)
             logging.warning("Can't post on telegram")
 
 
-def stream_tweets(selected_tweets, api, config, auth):
+def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, config: Config, auth: tweepy.OAuthHandler) -> None:
     if not config.TRACKS:
         config.TRACKS = ['twitter']
 
@@ -45,7 +46,7 @@ def stream_tweets(selected_tweets, api, config, auth):
                     + '\nretweet interval: ' + str(config.RETWEET_INTERVAL)
                     + '\nsave_tweets: ' + str(config.SAVE_TWEETS)
                     + '\nsave_tweets_path: ' + config.SAVE_TWEETS_PATH
-                    + '\ntracks: ' + " ".join(config.TRACKS))
+                    + '\ntracks: ' + " ".join(config.TRACKS.keys()))
     try:
         tweet_selector = GreedySelector(api, config.TRACKS, config.FILTER_WORDS, config.BLACK_LIST)
         storage_handler = None
@@ -54,9 +55,10 @@ def stream_tweets(selected_tweets, api, config, auth):
         listener = TweetListener(selected_tweets, tweet_selector, storage_handler)
         stream = tweepy.Stream(auth=auth, listener=listener)
         # starting stream
-        stream.filter(track=config.TRACKS[config.START_INDEX:], languages=config.LANGUAGES)
+        tracks: list = list(config.TRACKS.keys())
+        stream.filter(track=tracks[config.START_INDEX:], languages=config.LANGUAGES)
     except Exception:
-        logging.error("Unexpected error: " + str(sys.exc_info()))
+        logging.error("Unexpected error: " + str(sys.exc_info()) + "\n" + traceback.format_exc())
 
 
 def keyboard_interrupt_handler(signal_input, frame):

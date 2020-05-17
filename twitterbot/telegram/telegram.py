@@ -14,8 +14,8 @@ class Telegram:
             'text': tweet_link,
             'parse_mode': 'HTML'
         }
-        logging.warning(requests.post("https://api.telegram.org/bot{token}/sendMessage".format(token=bot_token),
-                                      data=payload).content)
+        logging.info(requests.post("https://api.telegram.org/bot{token}/sendMessage".format(token=bot_token),
+                                   data=payload).content)
         Telegram.send_poll(status.id_str, bot_token, chat_id, ['funny', 'useful', 'offensive'])
 
     @staticmethod
@@ -29,5 +29,5 @@ class Telegram:
             'parse_mode': 'HTML'
         }
 
-        logging.warning(requests.post("https://api.telegram.org/bot{token}/sendPoll".format(token=bot_token),
-                                      data=payload).content)
+        logging.info(requests.post("https://api.telegram.org/bot{token}/sendPoll".format(token=bot_token),
+                                   data=payload).content)

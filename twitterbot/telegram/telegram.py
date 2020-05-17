@@ -16,7 +16,7 @@ class Telegram:
         }
         logging.info(requests.post("https://api.telegram.org/bot{token}/sendMessage".format(token=bot_token),
                                    data=payload).content)
-        Telegram.send_poll(status.id_str, bot_token, chat_id, ['funny', 'useful', 'offensive'])
+        # Telegram.send_poll(status.id_str, bot_token, chat_id, ['funny', 'useful', 'offensive'])
 
     @staticmethod
     def send_poll(tweet_id: str, bot_token: str, chat_id: str, options: list):

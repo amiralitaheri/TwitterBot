@@ -39,4 +39,14 @@ Please note that greedy_selector is created for Persian language.
 
 As mention in *How to it for your own bot* section you need a Twitter developer account to run this code.
 If you have problem in getting one, contact me and I might be able to help you. 
+
+See [CONTRIBUTING.md](https://github.com/amiralitaheri/TwitterBot/blob/master/CONTRIBUTING.md) for more detail.
+
+### Goals to archive
+- [X] ~~create a basic Twitter bot~~
+- [ ] create Telegram bot
+- [ ] get at least 100 subscribers in telegram channel
+- [ ] label the data using telegram channel
+- [ ] create a persian NLP
+
  

@@ -9,3 +9,9 @@ Please note that greedy_selector is created for Persian language.
 
 As mention in *How to it for your own bot* section you need a Twitter developer account to run this code.
 If you have problem in getting one, contact me and I might be able to help you. 
+
+### Things to keep in mind
+1. If you are working on an issue/feature, try announcing it to others to avoid to people working on same issue/feature
+2. Try to test your code and make it as clean as possible before submitting a pull request
+3. Push your code in a branch named *yourName_featureName* avoid pushing to *master* branch 
+

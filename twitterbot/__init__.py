@@ -2,6 +2,7 @@ import logging
 import sys
 
 import requests
+from twitterbot.utils.config import Config
 
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -15,25 +16,29 @@ file = logging.FileHandler('bot.log', encoding='utf-8')
 file.setFormatter(formatter)
 logging.root.addHandler(file)
 
-# code for logging to telegram
-TELEGRAM_TOKEN = ''
-TELEGRAM_CHAT_ID = ''
-
 
 class RequestsHandler(logging.Handler):
+    def __init__(self, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, ):
+        self.TELEGRAM_TOKEN = TELEGRAM_TOKEN
+        self.TELEGRAM_CHAT_ID = TELEGRAM_CHAT_ID
+
     def emit(self, record):
         log_entry = self.format(record)
         payload = {
-            'chat_id': TELEGRAM_CHAT_ID,
+            'chat_id': self.TELEGRAM_CHAT_ID,
             'text': log_entry,
             'parse_mode': 'HTML'
         }
-        return requests.post("https://api.telegram.org/bot{token}/sendMessage".format(token=TELEGRAM_TOKEN),
+        return requests.post("https://api.telegram.org/bot{token}/sendMessage".format(token=self.TELEGRAM_TOKEN),
                              data=payload).content
 
 
-if TELEGRAM_TOKEN != '' and TELEGRAM_CHAT_ID != '':
-    telegram = RequestsHandler()
+# load configs from file
+with open('config.json', 'r', encoding="utf-8") as file:
+    config = Config(file)
+
+if config.TELEGRAM_BOT_TOKEN != '' and config.TELEGRAM_LOG_CHAT_ID != '':
+    telegram = RequestsHandler(config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_LOG_CHAT_ID)
     telegram.setFormatter(formatter)
     logging.root.addHandler(telegram)
 

@@ -14,12 +14,13 @@ from twitterbot.tweetselectors.greedy_selector import GreedySelector
 from twitterbot.twitter.authentication import authenticate_1
 from twitterbot.twitter.tweet_listener import TweetListener
 from twitterbot.utils.config import Config
-# this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
 from twitterbot.utils.status_rate_wrapper import StatusRateWrapper
 
 
-def retweet_function(selected_tweets, api, telegram, telegram_token, channel_id):
+# this function will be called in intervals and will pop the top tweet from selected_tweets and retweet it
+def retweet_function(selected_tweets, api):
     succeeded = False
+    config = Config()
     while True:
         try:
             if selected_tweets.qsize() == 0:
@@ -31,16 +32,17 @@ def retweet_function(selected_tweets, api, telegram, telegram_token, channel_id)
             break
         except tweepy.error.TweepError:
             logging.info('You have already retweeted this Tweet.')
-    if telegram and succeeded:
+    if config.TELEGRAM and succeeded:
         try:
-            Telegram.post_tweet_link(wrapper.status, telegram_token, channel_id)
+            Telegram.post_tweet_link(wrapper.status, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_CHANNEL_ID)
         except Exception:
             logging.warning("Can't post on telegram")
 
 
-def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, config: Config, auth: tweepy.OAuthHandler) -> None:
+def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, auth: tweepy.OAuthHandler) -> None:
+    config = Config()
     if not config.TRACKS:
-        config.TRACKS = ['twitter']
+        config.TRACKS = {'twitter': 0.9}
 
     logging.warning('starting config:'
                     + '\nretweet interval: ' + str(config.RETWEET_INTERVAL)
@@ -69,17 +71,13 @@ def keyboard_interrupt_handler(signal_input, frame):
 
 
 def main():
-    # load configs from file
-    with open('config.json', 'r', encoding="utf-8") as file:
-        config = Config(file)
-
     selected_tweets = PriorityQueue()
 
     auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)
     api = tweepy.API(auth)
 
     stream_scheduler.add_job(stream_tweets,
-                             args=[selected_tweets, api, config, auth],
+                             args=[selected_tweets, api, auth],
                              coalesce=True,
                              trigger='interval',
                              minutes=30,
@@ -92,8 +90,7 @@ def main():
 
     # scheduler to call retweet_function in intervals
     retweet_scheduler.add_job(retweet_function,
-                              args=[selected_tweets, api, config.TELEGRAM, config.TELEGRAM_BOT_TOKEN,
-                                    config.TELEGRAM_CHANNEL_ID],
+                              args=[selected_tweets, api],
                               trigger='interval',
                               minutes=config.RETWEET_INTERVAL,
                               misfire_grace_time=15,
@@ -107,7 +104,7 @@ def main():
 
     # apscheduler mostly used in web server application, it can't start a job when the main thread is terminated
     # so this infinit loop will keep the main thread running
-    # todo: find a better way(suggestion: port hole bot to flask or django and create an gui as well)
+    # todo: find a better way(suggestion: port whole bot to flask or django and create an gui as well)
     while True:
         time.sleep(10)
 

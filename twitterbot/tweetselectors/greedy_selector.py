@@ -20,7 +20,7 @@ class GreedySelector(TweetSelectorInterface):
         if status.user.id_str in self.user_black_list:
             return rate
         if status.in_reply_to_status_id is not None:
-            rate -= 1
+            return rate
         logging.info(status)
         if hasattr(status, 'extended_tweet'):
             rate += self._rate_base_on_text(status.extended_tweet['full_text'])

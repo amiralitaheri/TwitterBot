@@ -71,6 +71,7 @@ def keyboard_interrupt_handler(signal_input, frame):
 
 
 def main():
+    config = Config()
     selected_tweets = PriorityQueue()
 
     auth = authenticate_1(config.CONSUMER_KEY, config.CONSUMER_SECRET, config.TOKEN_KEY, config.TOKEN_SECRET)

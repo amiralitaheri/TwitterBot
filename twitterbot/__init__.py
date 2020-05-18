@@ -18,9 +18,10 @@ logging.root.addHandler(file)
 
 
 class RequestsHandler(logging.Handler):
-    def __init__(self, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, ):
-        self.TELEGRAM_TOKEN = TELEGRAM_TOKEN
-        self.TELEGRAM_CHAT_ID = TELEGRAM_CHAT_ID
+    def __init__(self, telegram_token, telegram_chat_id):
+        super().__init__()
+        self.TELEGRAM_TOKEN = telegram_token
+        self.TELEGRAM_CHAT_ID = telegram_chat_id
 
     def emit(self, record):
         log_entry = self.format(record)

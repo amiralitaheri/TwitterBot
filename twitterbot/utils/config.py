@@ -48,3 +48,5 @@ class Config:
         TELEGRAM_BOT_TOKEN: str = ""
         TELEGRAM_CHANNEL_ID: str = ""
         TELEGRAM_LOG_CHAT_ID: str = ""
+        TELEGRAM_VOTE_CHANNEL_ID: str = ""
+        VOTE_SKIP_FACTOR: int = 0

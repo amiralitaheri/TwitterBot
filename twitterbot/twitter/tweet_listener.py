@@ -51,6 +51,7 @@ class Executor(threading.Thread):
         self.selector = selector
         self.storage_handler = storage_handler
         self.killer = False
+        self.tweet_counter = 0
 
     def run(self):
         while True:
@@ -67,7 +68,7 @@ class Executor(threading.Thread):
 
         # share tweet to voting channel
         config = Config()
-        if config.TELEGRAM_BOT_TOKEN != '' and config.TELEGRAM_VOTE_CHANNEL_ID != '':
+        if config.TELEGRAM_BOT_TOKEN != '' and config.TELEGRAM_VOTE_CHANNEL_ID != '' and self.tweet_counter % config.VOTE_SKIP_FACTOR == 0:
             Telegram.post_tweet_link(status, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_VOTE_CHANNEL_ID)
             Telegram.send_poll(status.id_str, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_VOTE_CHANNEL_ID,
                                ['funny', 'useful', 'offensive'])

@@ -6,6 +6,8 @@ from queue import Queue, PriorityQueue
 import tweepy
 from twitterbot.abstracts.storage_handler_interface import StorageHandlerInterface
 from twitterbot.abstracts.tweet_selector_interface import TweetSelectorInterface
+from twitterbot.telegram.telegram import Telegram
+from twitterbot.utils.config import Config
 from twitterbot.utils.status_rate_wrapper import StatusRateWrapper
 
 
@@ -62,6 +64,15 @@ class Executor(threading.Thread):
     def handle_tweets(self):
         status: tweepy.Status = self.fifo.get()
         rating: float = self.selector.rate_tweet(status)  # get rating from selector
+
+        # share tweet to voting channel
+        config = Config()
+        if config.TELEGRAM_BOT_TOKEN != '' and config.TELEGRAM_VOTE_CHANNEL_ID != '':
+            Telegram.post_tweet_link(status, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_VOTE_CHANNEL_ID)
+            Telegram.send_poll(status.id_str, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_VOTE_CHANNEL_ID,
+                               ['funny', 'useful', 'offensive'])
+
+        # put tweets on queue for main telegram channel and twitter
         if rating > 0.6:  # only add tweets with rating above 0.6
             wrapper = StatusRateWrapper()
             wrapper.status = status

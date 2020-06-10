@@ -26,7 +26,7 @@ def retweet_function(selected_tweets, api):
             if selected_tweets.qsize() == 0:
                 break
             wrapper: StatusRateWrapper = selected_tweets.get(block=False)
-            logging.info('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
+            logging.warning('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
             api.retweet(wrapper.status.id)
             succeeded = True
             break

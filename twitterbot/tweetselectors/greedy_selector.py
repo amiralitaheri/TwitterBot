@@ -53,7 +53,7 @@ class GreedySelector(TweetSelectorInterface):
 
         value, keywords_dic = self.word_counter(user.description)
         rate += value / 3
-        return min(rate, 0.33)
+        return min(rate, 0.1)
 
     def word_counter(self, text: str) -> (float, dict):
         text = text.lower()

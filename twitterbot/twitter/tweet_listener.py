@@ -74,7 +74,7 @@ class Executor(threading.Thread):
                                ['funny', 'useful', 'offensive'])
 
         # put tweets on queue for main telegram channel and twitter
-        if rating > 0.6:  # only add tweets with rating above 0.6
+        if rating > 0.61:  # only add tweets with rating above 0.61
             wrapper = StatusRateWrapper()
             wrapper.status = status
             wrapper.rate = -1 * rating  # (-1 * rating) because python PQ uses min-heap(min value will pop first)

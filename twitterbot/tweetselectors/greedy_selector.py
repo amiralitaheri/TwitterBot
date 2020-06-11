@@ -17,7 +17,7 @@ class GreedySelector(TweetSelectorInterface):
 
     def rate_tweet(self, status: Status) -> float:
         rate = 0.0
-        if status["text"].startswith("RT @"):
+        if status.text.startswith("RT @"):
             return rate
         if status.user.id_str in self.user_black_list:
             return rate

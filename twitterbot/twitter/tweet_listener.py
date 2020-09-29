@@ -37,6 +37,8 @@ class TweetListener(tweepy.StreamListener):
 
     def on_exception(self, exception):
         logging.critical(exception)
+        self.executor.killer = True
+        self.executor.join()
 
     def on_limit(self, track):
         logging.warning('a limit message was return by twitter, ' + str(track))

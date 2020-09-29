@@ -2,10 +2,10 @@ import logging
 import signal
 import sys
 import time
-import traceback
 from datetime import datetime
 from queue import PriorityQueue
 
+import traceback
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
 from twitterbot.storagehandlers.json_storage_handler import JsonStorageHandler
@@ -64,7 +64,7 @@ def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, auth: tweepy.
 
 
 def keyboard_interrupt_handler(signal_input, frame):
-    print("KeyboardInterrupt (ID: {}) has been caught. exiting".format(signal_input))
+    logging.critical("KeyboardInterrupt (ID: {}) has been caught. exiting".format(signal_input))
     stream_scheduler.shutdown(wait=False)
     retweet_scheduler.shutdown(wait=False)
     exit(0)

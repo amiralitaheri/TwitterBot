@@ -36,7 +36,7 @@ def retweet_function(selected_tweets, api):
         try:
             Telegram.post_tweet_link(wrapper.status, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_CHANNEL_ID)
         except Exception:
-            logging.warning("Can't post on telegram")
+            logging.error("Can't post on telegram")
 
 
 def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, auth: tweepy.OAuthHandler) -> None:

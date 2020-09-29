@@ -43,4 +43,4 @@ if config.TELEGRAM_BOT_TOKEN != '' and config.TELEGRAM_LOG_CHAT_ID != '':
     telegram.setFormatter(formatter)
     logging.root.addHandler(telegram)
 
-logging.root.setLevel(logging.WARNING)
+logging.root.setLevel(logging.ERROR)

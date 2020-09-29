@@ -26,7 +26,7 @@ def retweet_function(selected_tweets, api):
             if selected_tweets.qsize() == 0:
                 break
             wrapper: StatusRateWrapper = selected_tweets.get(block=False)
-            logging.warning('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
+            logging.info('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
             api.retweet(wrapper.status.id)
             succeeded = True
             break
@@ -64,7 +64,7 @@ def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, auth: tweepy.
 
 
 def keyboard_interrupt_handler(signal_input, frame):
-    logging.critical("KeyboardInterrupt (ID: {}) has been caught. exiting".format(signal_input))
+    logging.error("KeyboardInterrupt (ID: {}) has been caught. exiting".format(signal_input))
     stream_scheduler.shutdown(wait=False)
     retweet_scheduler.shutdown(wait=False)
     exit(0)

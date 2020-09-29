@@ -25,7 +25,7 @@ class TweetListener(tweepy.StreamListener):
         self.fifo.put_nowait(status)
 
     def on_error(self, status_code):
-        logging.warning('an error return by twitter, error code :' + str(status_code))
+        logging.error('an error return by twitter, error code :' + str(status_code))
 
     def on_connect(self):
         self.executor.start()

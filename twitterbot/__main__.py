@@ -2,12 +2,13 @@ import logging
 import signal
 import sys
 import time
+import traceback
 from datetime import datetime
 from queue import PriorityQueue
 
-import traceback
 import tweepy
 from apscheduler.schedulers.background import BackgroundScheduler
+
 from twitterbot.storagehandlers.json_storage_handler import JsonStorageHandler
 from twitterbot.telegram.telegram import Telegram
 from twitterbot.tweetselectors.greedy_selector import GreedySelector
@@ -81,7 +82,7 @@ def main():
                              args=[selected_tweets, api, auth],
                              coalesce=True,
                              trigger='interval',
-                             minutes=30,
+                             minutes=5,
                              misfire_grace_time=200,
                              max_instances=1,
                              name='stream_scheduler',

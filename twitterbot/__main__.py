@@ -60,8 +60,10 @@ def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, auth: tweepy.
         # starting stream
         tracks: list = list(config.TRACKS.keys())
         stream.filter(track=tracks[config.START_INDEX:], languages=config.LANGUAGES)
-    except Exception:
+        logging.warning('the stream thread finished.')
+    except Exception as e:
         logging.error("Unexpected error: " + str(sys.exc_info()) + "\n" + traceback.format_exc())
+        logging.error(e)
 
 
 def keyboard_interrupt_handler(signal_input, frame):

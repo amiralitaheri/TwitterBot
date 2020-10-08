@@ -4,6 +4,7 @@ import time
 from queue import Queue, PriorityQueue
 
 import tweepy
+
 from twitterbot.abstracts.storage_handler_interface import StorageHandlerInterface
 from twitterbot.abstracts.tweet_selector_interface import TweetSelectorInterface
 from twitterbot.telegram.telegram import Telegram
@@ -36,9 +37,9 @@ class TweetListener(tweepy.StreamListener):
         self.executor.join()
 
     def on_exception(self, exception):
-        logging.critical(exception)
         self.executor.killer = True
         self.executor.join()
+        raise exception
 
     def on_limit(self, track):
         logging.warning('a limit message was return by twitter, ' + str(track))

@@ -7,8 +7,6 @@ import tweepy
 
 from twitterbot.abstracts.storage_handler_interface import StorageHandlerInterface
 from twitterbot.abstracts.tweet_selector_interface import TweetSelectorInterface
-from twitterbot.telegram.telegram import Telegram
-from twitterbot.utils.config import Config
 from twitterbot.utils.status_rate_wrapper import StatusRateWrapper
 
 
@@ -61,7 +59,7 @@ class Executor(threading.Thread):
             if self.fifo.qsize() == 0:
                 if self.killer:
                     return
-                time.sleep(5)
+                time.sleep(1)
             else:
                 self.handle_tweets()
 
@@ -69,19 +67,9 @@ class Executor(threading.Thread):
         status: tweepy.Status = self.fifo.get()
         rating: float = self.selector.rate_tweet(status)  # get rating from selector
 
-        # share tweet to voting channel
-        config = Config()
-        if config.TELEGRAM_BOT_TOKEN != '' and config.TELEGRAM_VOTE_CHANNEL_ID != '' and self.tweet_counter % config.VOTE_SKIP_FACTOR == 0:
-            Telegram.post_tweet_link(status, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_VOTE_CHANNEL_ID)
-            Telegram.send_poll(status.id_str, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_VOTE_CHANNEL_ID,
-                               ['funny', 'useful', 'offensive'])
-
         # put tweets on queue for main telegram channel and twitter
         if rating > 0.61:  # only add tweets with rating above 0.61
             wrapper = StatusRateWrapper()
             wrapper.status = status
             wrapper.rate = -1 * rating  # (-1 * rating) because python PQ uses min-heap(min value will pop first)
             self.queue.put(wrapper)
-
-        if self.storage_handler is not None:
-            self.storage_handler.store_tweet(status)  # save tweets

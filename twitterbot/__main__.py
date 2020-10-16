@@ -30,7 +30,8 @@ def retweet_function(selected_tweets, api):
             logging.info('retweeting message with rating(' + str(wrapper.rate * -1) + '): ' + str(wrapper.status.id))
             api.retweet(wrapper.status.id)
             succeeded = True
-            break
+            if selected_tweets.qsize() < 10:
+                break
         except tweepy.error.TweepError:
             logging.info('You have already retweeted this Tweet.')
     if config.TELEGRAM and succeeded:
@@ -40,7 +41,7 @@ def retweet_function(selected_tweets, api):
             logging.error("Can't post on telegram")
 
 
-def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, auth: tweepy.OAuthHandler) -> None:
+def stream_tweets(selected_tweets: PriorityQueue, auth: tweepy.OAuthHandler) -> None:
     config = Config()
     if not config.TRACKS:
         config.TRACKS = {'twitter': 0.9}
@@ -51,7 +52,7 @@ def stream_tweets(selected_tweets: PriorityQueue, api: tweepy.API, auth: tweepy.
                     + '\nsave_tweets_path: ' + config.SAVE_TWEETS_PATH
                     + '\ntracks: ' + " ".join(config.TRACKS.keys()))
     try:
-        tweet_selector = GreedySelector(api, config.TRACKS, config.FILTER_WORDS, config.BLACK_LIST)
+        tweet_selector = GreedySelector(config.TRACKS, config.FILTER_WORDS, config.BLACK_LIST)
         storage_handler = None
         if config.SAVE_TWEETS:
             storage_handler = JsonStorageHandler(config.SAVE_TWEETS_PATH)
@@ -81,10 +82,10 @@ def main():
     api = tweepy.API(auth)
 
     stream_scheduler.add_job(stream_tweets,
-                             args=[selected_tweets, api, auth],
+                             args=[selected_tweets, auth],
                              coalesce=True,
                              trigger='interval',
-                             minutes=5,
+                             minutes=20,
                              misfire_grace_time=200,
                              max_instances=1,
                              name='stream_scheduler',

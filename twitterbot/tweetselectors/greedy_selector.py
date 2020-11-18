@@ -34,6 +34,7 @@ class GreedySelector(TweetSelectorInterface):
         return min(rate, 1)
 
     def _rate_base_on_text(self, text: str) -> float:
+        text = re.sub(r'(^|[^@\w])@(\w{1,15})\b', '', text)  # remove id from text
         value, keywords_dic = self.word_counter(text)
         return value
 

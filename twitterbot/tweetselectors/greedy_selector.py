@@ -19,8 +19,8 @@ class GreedySelector(TweetSelectorInterface):
 
     def rate_tweet(self, status: Status) -> float:
         rate = 0.0
-        # if status.fu.startswith("RT @"):
-        #     return rate
+        if status.text.startswith("RT @"):
+            return rate
         if status.user.id_str in self.user_black_list:
             return rate
         if status.in_reply_to_status_id is not None:
@@ -29,7 +29,7 @@ class GreedySelector(TweetSelectorInterface):
         if hasattr(status, 'extended_tweet'):
             rate += self._rate_base_on_text(status.extended_tweet['full_text'])
         else:
-            rate += self._rate_base_on_text(status.full_text)
+            rate += self._rate_base_on_text(status.text)
         rate += self._rate_base_on_user(status.user)
         logging.info(rate)
         return min(rate, 1)

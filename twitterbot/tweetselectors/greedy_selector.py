@@ -3,14 +3,22 @@ import logging
 import hazm
 import tweepy
 from tweepy import Status, API
+
 from twitterbot.abstracts.tweet_selector_interface import TweetSelectorInterface
+
+
+def remove_symbols(text: str) -> str:
+    return text.translate(str.maketrans(
+        {'#': ' ', '$': ' ', '/': ' ', '+': ' ', '=': ' ', ':': ' ', ',': ' ', ';': ' ', '؛': ' ', '،': ' ',
+         '.': ' ', '!': ' ', '؟': ' ', '?': ' ', '«': ' ', '»': ' ', '(': ' ', ')': ' ', '_': ' ', '-': ' ',
+         '@': ' '}))
 
 
 class GreedySelector(TweetSelectorInterface):
     def __init__(self, api: API, keywords: dict, filter_words: list, user_black_list: list):
         super(GreedySelector, self).__init__()
         self.api = api
-        self.keywords = keywords
+        self.keywords = [remove_symbols(keyword) for keyword in keywords]
         self.me = api.me().id
         self.filter_words = filter_words
         self.user_black_list = user_black_list
@@ -57,10 +65,7 @@ class GreedySelector(TweetSelectorInterface):
 
     def word_counter(self, text: str) -> (float, dict):
         text = text.lower()
-        text = text.translate(str.maketrans(
-            {'#': ' ', '$': ' ', '/': ' ', '+': ' ', '=': ' ', ':': ' ', ',': ' ', ';': ' ', '؛': ' ', '،': ' ',
-             '.': ' ', '!': ' ', '؟': ' ', '?': ' ', '«': ' ', '»': ' ', '(': ' ', ')': ' ', '_': ' ', '-': ' ',
-             '@': ' '}))
+        text = remove_symbols(text)
         text = hazm.Normalizer().normalize(text)
         text = hazm.word_tokenize(text)
         stemmer = hazm.Stemmer()

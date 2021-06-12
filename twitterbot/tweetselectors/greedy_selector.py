@@ -1,6 +1,5 @@
 import logging
 
-import hazm
 import tweepy
 from tweepy import Status, API
 
@@ -66,13 +65,11 @@ class GreedySelector(TweetSelectorInterface):
     def word_counter(self, text: str) -> (float, dict):
         text = text.lower()
         text = remove_symbols(text)
-        text = hazm.Normalizer().normalize(text)
-        text = hazm.word_tokenize(text)
-        stemmer = hazm.Stemmer()
+        text = text.split()
         keywords_dic = {word: 0 for word in self.keywords.keys()}
         value = 0.0
         for i in range(len(text)):
-            stemmed_word = stemmer.stem(text[i])
+            stemmed_word = text[i]
             if stemmed_word in keywords_dic:
                 keywords_dic[stemmed_word] += 1
                 if keywords_dic[stemmed_word] == 1:  # count each word only once

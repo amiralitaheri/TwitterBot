@@ -15,12 +15,22 @@ class Config:
     def __getattr__(self, name):
         return getattr(self.instance, name)
 
+    def __setattr__(self, name, value):
+        Config.instance.__dict__[name] = value
+        Config.instance.save_config()
+
+
     class __Config:
         def __init__(self, file):
             self.load_config(file)
 
         def load_config(self, file):
             self.__dict__ = json.load(file)
+
+        def save_config(self):
+            with open('config.json', 'w', encoding='utf-8') as file:
+                   json.dump(self.__dict__, file, ensure_ascii=False, indent=4)
+                 
 
         # app consumer credentials
         CONSUMER_KEY: str = "<your consumer key>"

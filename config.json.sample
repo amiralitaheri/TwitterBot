@@ -11,6 +11,7 @@
   "TELEGRAM_LOG_CHAT_ID": "",
   "VOTE_SKIP_FACTOR": 50,
 
+  "RETWEET" : True,
   "RETWEET_INTERVAL": 5,
   "SAVE_TWEETS": false,
   "SAVE_TWEETS_PATH": "/tweets",

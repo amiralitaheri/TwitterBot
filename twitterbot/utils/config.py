@@ -19,7 +19,6 @@ class Config:
         Config.instance.__dict__[name] = value
         Config.instance.save_config()
 
-
     class __Config:
         def __init__(self, file):
             self.load_config(file)
@@ -29,8 +28,7 @@ class Config:
 
         def save_config(self):
             with open('config.json', 'w', encoding='utf-8') as file:
-                   json.dump(self.__dict__, file, ensure_ascii=False, indent=4)
-                 
+                json.dump(self.__dict__, file, ensure_ascii=False, indent=4)
 
         # app consumer credentials
         CONSUMER_KEY: str = "<your consumer key>"
@@ -39,6 +37,7 @@ class Config:
         TOKEN_KEY: str = "<your user token(oauth_token)>"
         TOKEN_SECRET: str = "<your user token secret(oauth_verifier)>"
         # retweet interval in min
+        RETWEET = True
         RETWEET_INTERVAL: int = 10
         # tweets save
         SAVE_TWEETS: bool = False

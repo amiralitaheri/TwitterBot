@@ -76,7 +76,8 @@ def retweet(status, api):
     succeeded = True
     config = Config()
     try:
-        api.retweet(status.id)
+        if config.RETWEET:
+            api.retweet(status.id)
     except tweepy.error.TweepError:
         succeeded = False
     if config.TELEGRAM and succeeded:

@@ -13,7 +13,7 @@ You can follow the bot on twitter to see actual result of the bot.
 I will post selected tweets on my Telegram channel.  
 [**Join The Telegram Channel**](https://t.me/ProgrammerBotFarsi)
 
-### How to it for your own bot
+### How to create your own bot
 For using this bot you need a Twitter developer account, you can apply for one at this link https://developer.twitter.com/en/apply-for-access
 
 Assuming that you already have your Twitter developer account you should follow this steps:
@@ -42,11 +42,8 @@ If you have problem in getting one, contact me and I might be able to help you.
 
 See [CONTRIBUTING.md](https://github.com/amiralitaheri/TwitterBot/blob/master/CONTRIBUTING.md) for more detail.
 
-### Goals to archive
-- [X] ~~create a basic Twitter bot~~
-- [ ] create Telegram bot
-- [ ] get at least 100 subscribers in telegram channel
-- [ ] label the data using telegram channel
-- [ ] create a persian NLP
+## Warning: 
+New Twitter Developer Apps created on or after April 29, 2022 will not be able to gain access to v1.1 statuses/sample and v1.1 statuses/filter.
+https://twittercommunity.com/t/deprecation-announcement-removing-compliance-messages-from-statuses-filter-and-retiring-statuses-sample-from-the-twitter-api-v1-1/170500
 
  

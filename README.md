@@ -5,6 +5,19 @@
 ![GitHub](https://img.shields.io/github/license/amiralitaheri/TwitterBot)
 ![Twitter Follow](https://img.shields.io/twitter/follow/ProgrammerBotF?style=social)
 
+## Archived!!
+Dear users of TwitterBot,
+
+It is with a heavy heart that we bid farewell to our beloved bot today. Due to the recent changes made to the Twitter API by Elon Musk's team, we are no longer able to continue providing our services to you.
+
+Our bot was built with the intention of making your Twitter experience more enjoyable and we hope that we were able to achieve that goal.
+
+Unfortunately, the prices for the new Twitter API plans are unreasonably high, and we find it ridiculous that the hobby plan costs $100. As an open source project, we were unable to afford these costs, and we know that many of our users may also be unable to do so.
+
+While we are sad to say goodbye, we are proud of what we accomplished together and we will always be grateful for the time we spent with you.
+
+Thank you again for your support, and we wish you all the best in your future endeavors.
+
 ### Follow me on Twitter
 You can follow the bot on twitter to see actual result of the bot.  
 [**Follow ProgrammerBotF On Twitter**](https://twitter.com/ProgrammerBotF) 
